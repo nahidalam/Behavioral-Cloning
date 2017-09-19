@@ -7,6 +7,7 @@ import matplotlib.image as mpimg
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 from keras.models import Sequential
+from keras.models import load_model
 from keras.layers.core import Dense, Activation, Flatten, Dropout, Lambda
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
@@ -14,7 +15,8 @@ from keras.optimizers import Adam
 from keras.layers.advanced_activations import ELU
 from keras.regularizers import l2
 from keras.layers import Cropping2D
-#from keras.utils import plot_model
+from keras.utils.visualize_util import plot
+
 
 
 lines = []
@@ -216,5 +218,7 @@ model.fit(X_train, y_train, validation_split = 0.2, shuffle = True, nb_epoch = 5
 model.save('model.h5')
 
 
+
 #visualize the model
-#plot_model('model.h5', to_file='model.png')
+modelobj = load_model('model.h5')
+plot (modelobj, to_file='model.png')
