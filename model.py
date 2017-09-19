@@ -3,6 +3,7 @@ import csv
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 from keras.models import Sequential
@@ -13,6 +14,7 @@ from keras.optimizers import Adam
 from keras.layers.advanced_activations import ELU
 from keras.regularizers import l2
 from keras.layers import Cropping2D
+#from keras.utils import plot_model
 
 
 lines = []
@@ -80,6 +82,10 @@ for line in lines:
     measurements.append (measurement)
 
 
+'''
+Steering angle distribution adjustment. Do this to reduce the training bias of driving straight
+'''
+
 #visualize the distribution of angles for the collected images
 num_bins = 23
 avg_samples_per_bin = len(measurements)/num_bins
@@ -88,6 +94,7 @@ width = 0.7 * (bins[1] - bins[0])
 center = (bins[:-1] + bins[1:]) / 2
 plt.bar(center, hist, align='center', width=width)
 plt.plot((np.min(measurements), np.max(measurements)), (avg_samples_per_bin, avg_samples_per_bin), 'k-')
+#plt.savefig("angle-distribution-before.png", bbox_inches="tight");
 
 
 
@@ -115,6 +122,7 @@ measurements = np.delete(measurements, remove_list)
 hist, bins = np.histogram(measurements, num_bins)
 plt.bar(center, hist, align='center', width=width)
 plt.plot((np.min(measurements), np.max(measurements)), (avg_samples_per_bin, avg_samples_per_bin), 'k-')
+#plt.savefig("angle-distribution-after.png", bbox_inches="tight");
 
 
 
@@ -126,6 +134,25 @@ for image, measurement in zip(images, measurements):
     augmented_images.append(cv2.flip(image, 1))
     augmented_measurements.append(measurement*-1.0)
 
+
+'''
+# comment out this portion while repeated training
+# visualize how an image looks before augmentation
+# comment out the steering angle distribution adjustment code above
+fig = plt.figure(dpi=100, tight_layout=True, frameon=False) # dpi & figsize of my choosing
+fig.figimage(images[1], cmap=plt.cm.binary)
+fig.text(10.0,10.0,'image', size='medium', backgroundcolor='white', alpha=0.5)
+plt.savefig("fig-sample-image[1].png")
+plt.close(fig)
+
+# visualize how an image looks after augmentation
+# comment out the steering angle distribution adjustment code above
+fig = plt.figure(dpi=100, tight_layout=True, frameon=False) # dpi & figsize of my choosing
+fig.figimage(augmented_images[1], cmap=plt.cm.binary)
+fig.text(10.0,10.0,'augmented image', size='medium', backgroundcolor='white', alpha=0.5)
+plt.savefig("fig-aug-sample-image[1].png")
+plt.close(fig)
+'''
 
 
 #now create the train set
@@ -187,3 +214,7 @@ model.fit(X_train, y_train, validation_split = 0.2, shuffle = True, nb_epoch = 5
 
 
 model.save('model.h5')
+
+
+#visualize the model
+#plot_model('model.h5', to_file='model.png')
