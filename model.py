@@ -2,6 +2,7 @@ import cv2
 import csv
 import math
 import numpy as np
+import sklearn
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from sklearn.model_selection import train_test_split
@@ -162,7 +163,13 @@ X_train = np.array(augmented_images)
 y_train = np.array(augmented_measurements)
 
 
-
+'''
+# split into train/test sets
+image_train, image_validation = train_test_split(augmented_images, test_size=0.2)
+measurements_train, measurements_validation = train_test_split(augmented_measurements, test_size=0.2)
+print('Train:', image_train.shape, measurements_train.shape)
+print('Validation:', image_validation.shape, measurements_validation.shape)
+'''
 
 #Train the network - NVIDIA model
 
@@ -204,11 +211,6 @@ model.add(Dropout(0.50))
 
 # Add a fully connected output layer
 model.add(Dense(1))
-
-
-
-
-## use generator
 
 
 model.compile(loss = 'mse', optimizer= 'adam')
