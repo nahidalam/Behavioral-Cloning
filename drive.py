@@ -54,7 +54,7 @@ def preprocess_image(img):
     # crop to 40x320x3
     new_img = img[50:140,:,:]
     # apply subtle blur
-    new_img = cv2.GaussianBlur(new_img, (3,3), 0)
+    #new_img = cv2.GaussianBlur(new_img, (3,3), 0)
     # scale to 66x200x3 (same as nVidia)
     new_img = cv2.resize(new_img,(200, 66), interpolation = cv2.INTER_AREA)
 
